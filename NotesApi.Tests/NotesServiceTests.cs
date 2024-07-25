@@ -167,4 +167,22 @@ public class NotesServiceTests
         // Assert
         Assert.True(result.IsSuccess);
     }
+
+    [Fact]
+    public async Task NoteExistsAsync_ReturnsFalse_WhenNoteDoesNotExist()
+    {
+        // Arrange
+        var note = new Note
+        {
+            Id = 1,
+            Title = "Test Note",
+            Content = "Test Content"
+        };
+
+        // Act
+        var result = await _service.NoteExistsAsync(note.Id);
+
+        // Assert
+        Assert.False(result.IsSuccess);
+    }
 }
