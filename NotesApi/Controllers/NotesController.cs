@@ -71,8 +71,13 @@ public class NotesController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<Note>> PostNote(Note note)
     {
-        await _noteService.AddNoteAsync(note);
-        return CreatedAtAction("GetNote", new { id = note.Id }, note);
+        var result = await _noteService.AddNoteAsync(note);
+        if (result.IsSuccess)
+        {
+            return CreatedAtAction(nameof(GetNote), new { id = note.Id }, note);
+        }
+
+        return BadRequest(result.Error);
     }
 
     // DELETE: api/Notes/5
