@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using NotesApi.Data;
+using NotesApi.DTOs;
 using NotesApi.Extensions;
 using NotesApi.Models;
 
@@ -16,113 +17,102 @@ public class NoteService : INoteService
 
     public async Task<Result<IEnumerable<Note>>> GetNotesAsync()
     {
-        return await Task.Run(() =>
+        try
         {
-            try
-            {
-                var notes = _context.Notes.ToList();
-                return Result<IEnumerable<Note>>.Success(notes);
-            }
-            catch (Exception ex)
-            {
-                return Result<IEnumerable<Note>>.Failure($"Error retrieving notes: {ex.Message}");
-            }
-        });
+            var notes = await _context.Notes.ToListAsync();
+            return Result<IEnumerable<Note>>.Success(notes);
+        }
+        catch (Exception ex)
+        {
+            return Result<IEnumerable<Note>>.Failure($"Error retrieving notes: {ex.Message}");
+        }
     }
 
     public async Task<Result<Note>> GetNoteByIdAsync(int id)
     {
-        return await Task.Run(async () =>
+        try
         {
-            try
-            {
-                var note = await _context.Notes.FindAsync(id);
-                return note != null
-                    ? Result<Note>.Success(note)
-                    : Result<Note>.Failure("Note not found.");
-            }
-            catch (Exception ex)
-            {
-                return Result<Note>.Failure($"Error retrieving note: {ex.Message}");
-            }
-        });
+            var note = await _context.Notes.FindAsync(id);
+            return note != null
+                ? Result<Note>.Success(note)
+                : Result<Note>.Failure("Note not found.");
+        }
+        catch (Exception ex)
+        {
+            return Result<Note>.Failure($"Error retrieving note: {ex.Message}");
+        }
     }
 
-    public async Task<Result> AddNoteAsync(Note note)
+    public async Task<Result<int>> AddNoteAsync(NoteCreateDto noteDto)
     {
-        return await Task.Run(async () =>
+        try
         {
-            try
-            {
-                _context.Notes.Add(note);
-                await _context.SaveChangesAsync();
-                return Result.Success();
-            }
-            catch (Exception ex)
-            {
-                return Result.Failure($"Error adding note: {ex.Message}");
-            }
-        });
+            var note = new Note { Title = noteDto.Title, Content = noteDto.Content };
+
+            _context.Notes.Add(note);
+            await _context.SaveChangesAsync();
+            return Result<int>.Success(note.Id);
+        }
+        catch (Exception ex)
+        {
+            return Result<int>.Failure($"Error adding note: {ex.Message}");
+        }
     }
 
-    public async Task<Result> UpdateNoteAsync(Note note)
+    public async Task<Result> UpdateNoteAsync(NoteUpdateDto noteDto)
     {
-        return await Task.Run(async () =>
+        try
         {
-            try
-            {
-                _context.Entry(note).State = EntityState.Modified;
-                await _context.SaveChangesAsync();
-                return Result.Success();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                return await _context.Notes.AnyAsync(e => e.Id == note.Id)
-                    ? Result.Failure("Concurrency error.")
-                    : Result.Failure("Note not found.");
-            }
-            catch (Exception ex)
-            {
-                return Result.Failure($"Error updating note: {ex.Message}");
-            }
-        });
+            var note = await _context.Notes.FindAsync(noteDto.Id);
+            if (note == null)
+                return Result.Failure("Note not found.");
+
+            // Update the note properties
+            note.Title = noteDto.Title;
+            note.Content = noteDto.Content;
+
+            _context.Entry(note).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+            return Result.Success();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            return Result.Failure("Concurrency error.");
+        }
+        catch (Exception ex)
+        {
+            return Result.Failure($"Error updating note: {ex.Message}");
+        }
     }
 
     public async Task<Result> DeleteNoteAsync(int id)
     {
-        return await Task.Run(async () =>
+        try
         {
-            try
-            {
-                var note = await _context.Notes.FindAsync(id);
-                if (note == null)
-                    return Result.Failure("Note not found.");
+            var note = await _context.Notes.FindAsync(id);
+            if (note == null)
+                return Result.Failure("Note not found.");
 
-                _context.Notes.Remove(note);
-                await _context.SaveChangesAsync();
-                return Result.Success();
-            }
-            catch (Exception ex)
-            {
-                return Result.Failure($"Error deleting note: {ex.Message}");
-            }
-        });
+            _context.Notes.Remove(note);
+            await _context.SaveChangesAsync();
+            return Result.Success();
+        }
+        catch (Exception ex)
+        {
+            return Result.Failure($"Error deleting note: {ex.Message}");
+        }
     }
 
     public async Task<Result> NoteExistsAsync(int id)
     {
-        return await Task.Run(async () =>
+        try
         {
-            try
-            {
-                return await _context.Notes.AnyAsync(e => e.Id == id)
-                    ? Result.Success()
-                    : Result.Failure("Note not found.");
-            }
-            catch (Exception ex)
-            {
-                return Result.Failure($"Error checking for note: {ex.Message}");
-            }
-        });
+            bool exists = await _context.Notes.AnyAsync(e => e.Id == id);
+            return exists ? Result.Success() : Result.Failure("Note not found.");
+        }
+        catch (Exception ex)
+        {
+            return Result.Failure($"Error checking for note: {ex.Message}");
+        }
     }
 }

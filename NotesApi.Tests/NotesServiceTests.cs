@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Moq;
 using NotesApi.Data;
+using NotesApi.DTOs;
 using NotesApi.Models;
 using NotesApi.Services;
 
@@ -26,12 +27,7 @@ public class NotesServiceTests
     public async Task AddNoteAsync_ReturnsSuccess_WhenNoteIsAdded()
     {
         // Arrange
-        var note = new Note
-        {
-            Id = 1,
-            Title = "Test Note",
-            Content = "Test Content"
-        };
+        var note = new NoteCreateDto { Title = "Test Note", Content = "Test Content" };
 
         // Act
         var result = await _service.AddNoteAsync(note);
@@ -99,26 +95,25 @@ public class NotesServiceTests
     public async Task UpdateNoteAsync_ReturnsSuccess_WhenNoteIsUpdated()
     {
         // Arrange
-        var note = new Note
-        {
-            Id = 1,
-            Title = "Original Title",
-            Content = "Original Content"
-        };
+        var note = new NoteCreateDto { Title = "Original Title", Content = "Original Content" };
 
-        _context.Notes.Add(note);
+        var noteId = await _service.AddNoteAsync(note);
         await _context.SaveChangesAsync();
 
-        note.Title = "Updated Title";
-        note.Content = "Updated Content";
+        var updatedNoteDto = new NoteUpdateDto
+        {
+            Id = noteId.Value,
+            Title = "Updated Title",
+            Content = "Updated Content"
+        };
 
         // Act
-        var result = await _service.UpdateNoteAsync(note);
+        var result = await _service.UpdateNoteAsync(updatedNoteDto);
 
         // Assert
         Assert.True(result.IsSuccess);
 
-        var updatedNote = await _context.Notes.FindAsync(note.Id);
+        var updatedNote = await _context.Notes.FindAsync(updatedNoteDto.Id);
         Assert.Equal("Updated Title", updatedNote.Title);
         Assert.Equal("Updated Content", updatedNote.Content);
     }

@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using NotesApi.DTOs;
 using NotesApi.Models;
 using NotesApi.Services;
 
@@ -18,7 +19,7 @@ public class NotesController : ControllerBase
 
     // GET: api/Notes
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Note>>> GetNotes()
+    public async Task<ActionResult<IEnumerable<NoteDto>>> GetNotes()
     {
         var notes = await _noteService.GetNotesAsync();
         return Ok(notes);
@@ -26,7 +27,7 @@ public class NotesController : ControllerBase
 
     // GET: api/Notes/5
     [HttpGet("{id}")]
-    public async Task<ActionResult<Note>> GetNote(int id)
+    public async Task<ActionResult<NoteDto>> GetNote(int id)
     {
         var note = await _noteService.GetNoteByIdAsync(id);
 
@@ -40,7 +41,7 @@ public class NotesController : ControllerBase
 
     // PUT: api/Notes/5
     [HttpPut("{id}")]
-    public async Task<IActionResult> PutNote(int id, Note note)
+    public async Task<IActionResult> PutNote(int id, NoteUpdateDto note)
     {
         if (id != note.Id)
         {
@@ -69,12 +70,12 @@ public class NotesController : ControllerBase
 
     // POST: api/Notes
     [HttpPost]
-    public async Task<ActionResult<Note>> PostNote(Note note)
+    public async Task<ActionResult<Note>> PostNote(NoteCreateDto note)
     {
         var result = await _noteService.AddNoteAsync(note);
         if (result.IsSuccess)
         {
-            return CreatedAtAction(nameof(GetNote), new { id = note.Id }, note);
+            return CreatedAtAction(nameof(GetNote), new { id = result.Value }, note);
         }
 
         return BadRequest(result.Error);
