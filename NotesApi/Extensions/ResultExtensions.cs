@@ -4,14 +4,16 @@ public static class ResultExtensions
 {
     public static Result<TNew> OnSuccess<T, TNew>(this Result<T> result, Func<T, Result<TNew>> func)
     {
-        return result.IsSuccess ? func(result.Value) : Result<TNew>.Failure(result.Error);
+        return result.IsSuccess
+            ? func(result.Value!)
+            : Result<TNew>.Failure(result.Error ?? "An error occurred.");
     }
 
     public static Result<T> OnFailure<T>(this Result<T> result, Action<string> action)
     {
         if (!result.IsSuccess)
         {
-            action(result.Error);
+            action(result.Error ?? "An error occurred.");
         }
         return result;
     }

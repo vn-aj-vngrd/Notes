@@ -3,10 +3,10 @@ namespace NotesApi.Extensions;
 public class Result<T>
 {
     public bool IsSuccess { get; }
-    public T Value { get; }
-    public string Error { get; }
+    public T? Value { get; }
+    public string? Error { get; }
 
-    private Result(bool isSuccess, T value, string error)
+    private Result(bool isSuccess, T? value, string? error)
     {
         IsSuccess = isSuccess;
         Value = value;
@@ -21,9 +21,9 @@ public class Result<T>
 public class Result
 {
     public bool IsSuccess { get; }
-    public string Error { get; }
+    public string? Error { get; }
 
-    private Result(bool isSuccess, string error)
+    private Result(bool isSuccess, string? error)
     {
         IsSuccess = isSuccess;
         Error = error;
