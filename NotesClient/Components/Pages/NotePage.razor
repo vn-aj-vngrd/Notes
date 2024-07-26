@@ -1,4 +1,4 @@
-@page "/note/{id:int}"
+@page "/notes/{id:int}"
 @rendermode InteractiveServer
 
 <PageTitle>Note</PageTitle>
@@ -9,21 +9,23 @@
 }
 else
 {
-    <div class="container">
-
-    <div class="card">
-        <div class="card-header">
-            <h5 class="card-title">@_note.Title</h5>
-        </div>
-        <div class="card-body">
-            <p class="card-text">@_note.Content</p>
-            <div class="d-flex justify-content-between">
-                <a class="btn btn-warning" href="/note/edit/@_note.Id">Edit</a>
-                <button class="btn btn-danger" @onclick="HandleDeleteNote">Delete</button>
+    <div class="mt-2">
+        <div class="card shadow-sm">
+            <div class="card-header">
+                <h5 class="card-title">@_note.Title</h5>
+            </div>
+            <div class="card-body">
+                <p class="card-text">@_note.Content</p>
+                <div class="text-muted">
+                    <small>Created: @(_note.CreatedAt.ToString("MMMM d, yyyy h:mm tt"))</small><br />
+                    <small>Last Updated: @(_note.UpdatedAt.HasValue ? _note.UpdatedAt.Value.ToString("MMMM d, yyyy h:mm tt")
+                        : "Never")</small>
+                    </div>
+                    <div class="d-flex justify-content-end gap-2 mt-3">
+                        <a class="btn btn-warning" href="/notes/edit/@_note.Id">Edit</a>
+                        <button class="btn btn-danger" @onclick="HandleDeleteNote">Delete</button>
+                    </div>
             </div>
         </div>
     </div>
-
-</div>
-
 }
