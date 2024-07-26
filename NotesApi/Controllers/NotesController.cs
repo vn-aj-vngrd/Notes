@@ -20,7 +20,7 @@ public class NotesController : ControllerBase
 
     // GET: api/Notes
     [HttpGet]
-    public async Task<ActionResult<Result<NoteDto[]>>> GetNotes()
+    public async Task<ActionResult<Result<IEnumerable<NoteDto>>>> GetNotes()
     {
         var notes = await _noteService.GetNotesAsync();
         return Ok(notes);
@@ -42,7 +42,7 @@ public class NotesController : ControllerBase
 
     // PUT: api/Notes/5
     [HttpPut("{id}")]
-    public async Task<ActionResult<Result<Note>>> PutNote(int id, NoteUpdateDto note)
+    public async Task<ActionResult<Result<NoteDto>>> PutNote(int id, NoteUpdateDto note)
     {
         if (id != note.Id)
         {
@@ -75,7 +75,7 @@ public class NotesController : ControllerBase
 
     // POST: api/Notes
     [HttpPost]
-    public async Task<ActionResult<Result<Note>>> PostNote(NoteCreateDto note)
+    public async Task<ActionResult<Result<NoteDto>>> PostNote(NoteCreateDto note)
     {
         var result = await _noteService.AddNoteAsync(note);
         if (result.IsSuccess)

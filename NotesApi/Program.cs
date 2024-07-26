@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using NotesApi.Data;
+using NotesApi.Mappings;
 using NotesApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,6 +16,8 @@ builder.Services.AddSwaggerGen();
 
 // Services
 builder.Services.AddScoped<INoteService, NoteService>();
+
+builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 var app = builder.Build();
 
