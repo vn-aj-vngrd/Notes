@@ -3,25 +3,35 @@
 
 <PageTitle>Add Note</PageTitle>
 
-<div class="col-md-8 col-lg-6">
-    <div class="card">
-        <div class="card-header">
-            <h5 class="card-title">Add a New Note</h5>
+
+<div class="row justify-content-start container p-0">
+    <div class="col-md-10 col-lg-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">Add a New Note</h5>
+            </div>
+            <div class="card-body">
+                <form @onsubmit="HandleSubmit">
+                    <div class="mb-3">
+                        <label for="noteTitle" class="form-label">Title</label>
+                        <input type="text" class="form-control" id="noteTitle" @bind="noteTitle"
+                            placeholder="Enter note title" required />
+                    </div>
+                    <div class="mb-3">
+                        <label for="noteContent" class="form-label">Content</label>
+                        <textarea class="form-control" id="noteContent" @bind="noteContent"
+                            placeholder="Enter note content" rows="4" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Note</button>
+                </form>
+            </div>
         </div>
-        <div class="card-body">
-            <form @onsubmit="HandleSubmit">
-                <div class="mb-3">
-                    <label for="noteTitle" class="form-label">Title</label>
-                    <input type="text" class="form-control" id="noteTitle" @bind="noteTitle"
-                        placeholder="Enter note title" required />
-                </div>
-                <div class="mb-3">
-                    <label for="noteContent" class="form-label">Content</label>
-                    <textarea class="form-control" id="noteContent" @bind="noteContent" placeholder="Enter note content"
-                        rows="4" required></textarea>
-                </div>
-                <button type="submit" class="btn btn-primary">Add Note</button>
-            </form>
-        </div>
+
+        @if (!string.IsNullOrEmpty(_message))
+        {
+            <div class="alert @( _isSuccess ? "alert-success" : "alert-danger") mt-2" role="alert">
+                @_message
+            </div>
+        }
     </div>
 </div>

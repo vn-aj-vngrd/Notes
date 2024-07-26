@@ -10,8 +10,8 @@ partial class AddNotePage
     public required INotesService _service { get; set; }
     private string noteTitle = string.Empty;
     private string noteContent = string.Empty;
-    private bool isSuccess = false;
-    private string message = string.Empty;
+    private bool _isSuccess = false;
+    private string _message = string.Empty;
 
     private async Task HandleSubmit()
     {
@@ -20,10 +20,15 @@ partial class AddNotePage
             var newNote = new NoteCreateDto { Title = noteTitle, Content = noteContent, };
 
             var response = await _service.AddNoteAsync(newNote);
-            if (response.Content == null) { }
+            if (response.Content == null)
+            {
+                _isSuccess = false;
+                _message = "Failed to add note.";
+                return;
+            }
 
-            isSuccess = true;
-            message = "Note added successfully.";
+            _isSuccess = true;
+            _message = "Note added successfully.";
             noteTitle = string.Empty;
             noteContent = string.Empty;
         }
