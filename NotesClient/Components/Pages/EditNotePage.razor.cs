@@ -47,8 +47,8 @@ partial class EditNotePage
             await _service.UpdateNoteAsync(new NoteUpdateDto
             {
                 Id = _note!.Id,
-                Title = _note.Title,
-                Content = _note.Content
+                Title = noteTitle,
+                Content = noteContent,
             });
             _isSuccess = true;
             _message = "Note updated successfully!";
@@ -58,5 +58,10 @@ partial class EditNotePage
             _isSuccess = false;
             _message = ex.Message;
         }
+    }
+
+    private void NavigateBack()
+    {
+        Navigation.NavigateTo($"/notes/{Id}");
     }
 }
