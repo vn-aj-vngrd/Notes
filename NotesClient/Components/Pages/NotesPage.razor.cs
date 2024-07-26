@@ -19,11 +19,5 @@ public partial class NotesPage
     private async Task LoadNotes()
     {
         _notes = (await _service.GetNotesAsync()).AsQueryable();
-
-        Console.WriteLine($"Notes count: {_notes.Count()}");
-        foreach (var note in _notes)
-        {
-            Console.WriteLine($"Title: {note.Title}, Content: {note.Content}");
-        }
     }
 }
