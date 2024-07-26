@@ -1,0 +1,13 @@
+@page "/note/{id:int}"
+
+<PageTitle>Note</PageTitle>
+
+@if (_note == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <h1>@_note.Title</h1>
+    <p>@_note.Content</p>
+}

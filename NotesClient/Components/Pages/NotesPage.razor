@@ -1,10 +1,11 @@
 ﻿@page "/"
+@rendermode InteractiveServer
 
 <PageTitle>Notes</PageTitle>
 
 <h1>Your Notes</h1>
 
-<p> Welcome to the Notes App! </p>
+<p>Welcome to the Notes App!</p>
 
 @if (_notes == null)
 {
@@ -12,19 +13,22 @@
 }
 else
 {
-    <table class="table">
-    <thead>
-        <tr>
-            <th>Title</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var note in _notes)
-            {
-                <tr>
-                    <td>@note.Title</td>
-                </tr>
-            }
-        </tbody>
-    </table>
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    @foreach (var note in _notes)
+        {
+            <div class="col mb-1">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">@note.Title</h5>
+                        <p class="card-text">
+                            <small class="text-muted">
+                                Created: @note.CreatedAt.ToLocalTime().ToString("MMM d, yyyy @ h:mm tt")
+                            </small>
+                        </p>
+                        <a class="btn btn-primary btn-sm" href="/note/@note.Id">View Content</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
 }
