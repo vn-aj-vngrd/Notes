@@ -11,18 +11,18 @@ namespace NotesApi.Controllers;
 [ApiController]
 public class NotesController : ControllerBase
 {
-    private readonly INoteService _noteService;
+    private readonly INotesService _notesService;
 
-    public NotesController(INoteService noteService)
+    public NotesController(INotesService noteService)
     {
-        _noteService = noteService;
+        _notesService = noteService;
     }
 
     // GET: api/Notes
     [HttpGet]
     public async Task<ActionResult<Result<IEnumerable<NoteDto>>>> GetNotes()
     {
-        var notes = await _noteService.GetNotesAsync();
+        var notes = await _notesService.GetNotesAsync();
         return Ok(notes);
     }
 
@@ -30,7 +30,7 @@ public class NotesController : ControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult<Result<NoteDto>>> GetNote(int id)
     {
-        var note = await _noteService.GetNoteByIdAsync(id);
+        var note = await _notesService.GetNoteByIdAsync(id);
 
         if (note == null)
         {
@@ -44,7 +44,7 @@ public class NotesController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<Result<NoteDto>>> PostNote(NoteCreateDto note)
     {
-        var result = await _noteService.AddNoteAsync(note);
+        var result = await _notesService.AddNoteAsync(note);
         if (result.IsSuccess)
         {
             return CreatedAtAction(nameof(GetNote), new { id = result.Value }, result);
@@ -64,7 +64,7 @@ public class NotesController : ControllerBase
 
         try
         {
-            var result = await _noteService.UpdateNoteAsync(note);
+            var result = await _notesService.UpdateNoteAsync(note);
             if (result.IsSuccess)
             {
                 return Ok(result);
@@ -72,7 +72,7 @@ public class NotesController : ControllerBase
         }
         catch (DbUpdateConcurrencyException)
         {
-            var noteExists = await _noteService.NoteExistsAsync(id);
+            var noteExists = await _notesService.NoteExistsAsync(id);
             if (!noteExists.IsSuccess)
             {
                 return NotFound();
@@ -90,7 +90,7 @@ public class NotesController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<ActionResult<Result>> DeleteNote(int id)
     {
-        var result = await _noteService.DeleteNoteAsync(id);
+        var result = await _notesService.DeleteNoteAsync(id);
         return result.IsSuccess ? Ok(result) : NotFound(result);
     }
 }

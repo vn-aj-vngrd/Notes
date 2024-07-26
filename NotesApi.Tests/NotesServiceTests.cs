@@ -10,11 +10,11 @@ namespace NotesApi.Tests;
 
 public class NotesServiceTests
 {
-    private readonly Mock<INoteService> _noteService;
+    private readonly Mock<INotesService> _noteService;
 
     public NotesServiceTests()
     {
-        _noteService = new Mock<INoteService>();
+        _noteService = new Mock<INotesService>();
     }
 
     [Fact]

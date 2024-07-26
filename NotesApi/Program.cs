@@ -15,7 +15,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Services
-builder.Services.AddScoped<INoteService, NoteService>();
+builder.Services.AddScoped<INotesService, NotesService>();
 
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 

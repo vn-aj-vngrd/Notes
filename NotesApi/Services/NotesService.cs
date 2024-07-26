@@ -7,12 +7,12 @@ using NotesApi.Models;
 
 namespace NotesApi.Services;
 
-public class NoteService : INoteService
+public class NotesService : INotesService
 {
     private readonly AppDbContext _context;
     private readonly IMapper _mapper;
 
-    public NoteService(AppDbContext context, IMapper mapper)
+    public NotesService(AppDbContext context, IMapper mapper)
     {
         _context = context;
         _mapper = mapper;

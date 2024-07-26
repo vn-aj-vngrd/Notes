@@ -4,7 +4,7 @@ using NotesApi.Models;
 
 namespace NotesApi.Services;
 
-public interface INoteService
+public interface INotesService
 {
     Task<Result<IEnumerable<NoteDto>>> GetNotesAsync();
     Task<Result<NoteDto>> GetNoteByIdAsync(int id);
