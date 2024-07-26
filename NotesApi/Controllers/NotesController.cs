@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NotesApi.DTOs;
+using NotesApi.Extensions;
 using NotesApi.Models;
 using NotesApi.Services;
 
@@ -19,7 +20,7 @@ public class NotesController : ControllerBase
 
     // GET: api/Notes
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<NoteDto>>> GetNotes()
+    public async Task<ActionResult<Result<NoteDto[]>>> GetNotes()
     {
         var notes = await _noteService.GetNotesAsync();
         return Ok(notes);
@@ -27,7 +28,7 @@ public class NotesController : ControllerBase
 
     // GET: api/Notes/5
     [HttpGet("{id}")]
-    public async Task<ActionResult<NoteDto>> GetNote(int id)
+    public async Task<ActionResult<Result<NoteDto>>> GetNote(int id)
     {
         var note = await _noteService.GetNoteByIdAsync(id);
 
@@ -41,7 +42,7 @@ public class NotesController : ControllerBase
 
     // PUT: api/Notes/5
     [HttpPut("{id}")]
-    public async Task<IActionResult> PutNote(int id, NoteUpdateDto note)
+    public async Task<ActionResult<Result<Note>>> PutNote(int id, NoteUpdateDto note)
     {
         if (id != note.Id)
         {
@@ -50,7 +51,11 @@ public class NotesController : ControllerBase
 
         try
         {
-            await _noteService.UpdateNoteAsync(note);
+            var result = await _noteService.UpdateNoteAsync(note);
+            if (result.IsSuccess)
+            {
+                return Ok(result);
+            }
         }
         catch (DbUpdateConcurrencyException)
         {
@@ -65,17 +70,17 @@ public class NotesController : ControllerBase
             }
         }
 
-        return NoContent();
+        return BadRequest();
     }
 
     // POST: api/Notes
     [HttpPost]
-    public async Task<ActionResult<Note>> PostNote(NoteCreateDto note)
+    public async Task<ActionResult<Result<Note>>> PostNote(NoteCreateDto note)
     {
         var result = await _noteService.AddNoteAsync(note);
         if (result.IsSuccess)
         {
-            return CreatedAtAction(nameof(GetNote), new { id = result.Value }, note);
+            return CreatedAtAction(nameof(GetNote), new { id = result.Value }, result);
         }
 
         return BadRequest(result.Error);
@@ -83,9 +88,9 @@ public class NotesController : ControllerBase
 
     // DELETE: api/Notes/5
     [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteNote(int id)
+    public async Task<ActionResult<Result>> DeleteNote(int id)
     {
-        await _noteService.DeleteNoteAsync(id);
-        return NoContent();
+        var result = await _noteService.DeleteNoteAsync(id);
+        return result.IsSuccess ? Ok(result) : NotFound(result);
     }
 }
