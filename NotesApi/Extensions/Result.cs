@@ -6,6 +6,8 @@ public class Result<T>
     public T? Value { get; }
     public string? Error { get; }
 
+    public Result() { }
+
     private Result(bool isSuccess, T? value, string? error)
     {
         IsSuccess = isSuccess;
@@ -22,6 +24,8 @@ public class Result
 {
     public bool IsSuccess { get; }
     public string? Error { get; }
+
+    public Result() { }
 
     private Result(bool isSuccess, string? error)
     {

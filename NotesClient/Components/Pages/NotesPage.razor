@@ -1,0 +1,32 @@
+﻿@page "/"
+
+<PageTitle>Notes</PageTitle>
+
+<h1>Your Notes</h1>
+
+<p> Welcome to the Notes App! </p>
+
+@if (_notes == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Content</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var note in _notes)
+            {
+                <tr>
+                    <td>@note.Title</td>
+                    <td>@note.Content</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
