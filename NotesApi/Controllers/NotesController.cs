@@ -40,6 +40,19 @@ public class NotesController : ControllerBase
         return Ok(note);
     }
 
+    // POST: api/Notes
+    [HttpPost]
+    public async Task<ActionResult<Result<NoteDto>>> PostNote(NoteCreateDto note)
+    {
+        var result = await _noteService.AddNoteAsync(note);
+        if (result.IsSuccess)
+        {
+            return CreatedAtAction(nameof(GetNote), new { id = result.Value }, result);
+        }
+
+        return BadRequest(result.Error);
+    }
+
     // PUT: api/Notes/5
     [HttpPut("{id}")]
     public async Task<ActionResult<Result<NoteDto>>> PutNote(int id, NoteUpdateDto note)
@@ -71,19 +84,6 @@ public class NotesController : ControllerBase
         }
 
         return BadRequest();
-    }
-
-    // POST: api/Notes
-    [HttpPost]
-    public async Task<ActionResult<Result<NoteDto>>> PostNote(NoteCreateDto note)
-    {
-        var result = await _noteService.AddNoteAsync(note);
-        if (result.IsSuccess)
-        {
-            return CreatedAtAction(nameof(GetNote), new { id = result.Value }, result);
-        }
-
-        return BadRequest(result.Error);
     }
 
     // DELETE: api/Notes/5
