@@ -4,7 +4,7 @@ namespace NotesApi.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class HealtCheckController : ControllerBase
+public class HealthCheckController : ControllerBase
 {
     // GET: api/HealthCheck
     [HttpGet]
