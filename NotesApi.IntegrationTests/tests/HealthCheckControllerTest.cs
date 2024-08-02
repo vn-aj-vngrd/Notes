@@ -1,6 +1,6 @@
 namespace NotesApi.IntegrationTests;
 
-public class HealthCheckTest
+public class HealthCheckControllerTest
 {
     [Fact]
     public async Task HealthCheck_ReturnsHealthy()
