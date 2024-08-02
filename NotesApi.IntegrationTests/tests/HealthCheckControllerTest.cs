@@ -1,4 +1,6 @@
-namespace NotesApi.IntegrationTests;
+using NotesApi.IntegrationTests.Factory;
+
+namespace NotesApi.IntegrationTests.Tests;
 
 public class HealthCheckControllerTest
 {
