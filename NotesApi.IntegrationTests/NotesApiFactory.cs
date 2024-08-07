@@ -7,9 +7,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using NotesApi.Data;
 
-namespace NotesApi.IntegrationTests.Factory;
+namespace NotesApi.IntegrationTests;
 
-internal class NotesApiFactory : WebApplicationFactory<Program>
+public class NotesApiFactory : WebApplicationFactory<Program>
 {
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {

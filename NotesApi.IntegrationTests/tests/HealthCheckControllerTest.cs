@@ -1,15 +1,22 @@
-using NotesApi.IntegrationTests.Factory;
+using NotesApi.IntegrationTests;
 
 namespace NotesApi.IntegrationTests.Tests;
 
+[Collection("Integration Tests")]
 public class HealthCheckControllerTest
 {
+    private readonly NotesApiFactory _factory;
+
+    public HealthCheckControllerTest(NotesApiTestFixture fixture)
+    {
+        _factory = fixture.Factory;
+    }
+
     [Fact]
     public async Task HealthCheck_ReturnsHealthy()
     {
         // Arrange
-        using var factory = new NotesApiFactory();
-        var client = factory.CreateClient();
+        var client = _factory.CreateClient();
 
         // Act
         var response = await client.GetAsync("api/HealthCheck");

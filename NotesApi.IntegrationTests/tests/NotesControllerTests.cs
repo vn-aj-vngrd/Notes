@@ -1,20 +1,25 @@
 using System.Net.Http.Json;
 using System.Text.Json;
 using NotesApi.DTOs;
-using NotesApi.Extensions;
-using NotesApi.IntegrationTests.Factory;
 using NotesClient.Models;
 
 namespace NotesApi.IntegrationTests.Tests;
 
+[Collection("Integration Tests")]
 public class NotesControllerTests
 {
+    private readonly NotesApiFactory _factory;
+
+    public NotesControllerTests(NotesApiTestFixture fixture)
+    {
+        _factory = fixture.Factory;
+    }
+
     [Fact]
     public async Task GetNotes_ReturnsNotes()
     {
         // Arrange
-        using var factory = new NotesApiFactory();
-        var client = factory.CreateClient();
+        var client = _factory.CreateClient();
 
         // Add a note
         var note = new NoteCreateDto { Title = "Test", Content = "Test" };
@@ -42,8 +47,7 @@ public class NotesControllerTests
     public async Task GetNote_ReturnsNote()
     {
         // Arrange
-        using var factory = new NotesApiFactory();
-        var client = factory.CreateClient();
+        var client = _factory.CreateClient();
 
         // Add a note
         var note = new NoteCreateDto { Title = "Test", Content = "Test" };
